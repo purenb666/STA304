@@ -1,0 +1,19 @@
+---
+title: "Exploration of CES Data"
+author: "Wenqing Cao"
+date: 2015-07-23T21:13:14-05:00
+categories: ["R"]
+bibliography: "references.bib"
+tags: ["R Markdown", "plot", "regression"]
+---
+
+Code and data supporting this analysis is available at: "https://github.com/purenb666/STA304.git".
+
+We use `R` [@citeR] and `R` package `tidyverse` [@citetidyverse] to do the analysis.
+
+# Abstract: 
+
+"We investigated the 2019 CES data. Performed data diagnostics, and results showed that males have higher income than females and females have higher income than people of other gender types in Canada. These results are important because gender and income gap has always been an issue in Canada. (in total 3-4 sentences)"
+
+# References
+
