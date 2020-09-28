@@ -1,19 +1,146 @@
 ---
-title: "Exploration of CES Data"
+title: "Analysis of 2019 CES Data"
 author: "Wenqing Cao"
-date: 2015-07-23T21:13:14-05:00
-categories: ["R"]
+date: '2015-07-23T21:13:14-05:00'
+output: html_document
 bibliography: "references.bib"
-tags: ["R Markdown", "plot", "regression"]
+tags:
+- R Markdown
+- plot
+- regression
+categories: R
 ---
-
-Code and data supporting this analysis is available at: "https://github.com/purenb666/STA304.git".
-
-We use `R` [@citeR] and `R` package `tidyverse` [@citetidyverse] to do the analysis.
 
 # Abstract: 
 
-"We investigated the 2019 CES data. Performed data diagnostics, and results showed that males have higher income than females and females have higher income than people of other gender types in Canada. These results are important because gender and income gap has always been an issue in Canada. (in total 3-4 sentences)"
+We investigated the OpenToronto COVID-19 Cases in Toronto data. Performed data diagnostics, and results showed that the most common way cause people infected is close contact with a case in Toronto. These results are important because once we know the source of infection, we can then make move to protect people from infection.
+
+```{r}
+# Load packages
+library(opendatatoronto)
+library(tidyverse)
+library(dplyr)
+library(visdat)
+library(cesR)
+library(skimr)
+library(knitr)
+```
+
+```{r}
+# get package
+package <- show_package("64b54586-6180-4485-83eb-81e8fae3b8fe")
+package
+
+# get all resources for this package
+resources <- list_package_resources("64b54586-6180-4485-83eb-81e8fae3b8fe")
+
+# identify datastore resources; by default, Toronto Open Data sets datastore resource format to CSV for non-geospatial and GeoJSON for geospatial resources
+datastore_resources <- filter(resources, tolower(format) %in% c('csv', 'geojson'))
+
+# load the first datastore resource as a sample
+covid_data <- filter(datastore_resources, row_number()==1) %>% get_resource()
+selected_covid_data = select(covid_data, "Source of Infection")
+selected_covid_data
+```
+
+# Introduction
+
+While COVID-19 pandemic is still affecting people in various categories globally, it brings people atteion unprecedentedly. By examining the source of infection, we can get a better understanding of how to prevent it from the root. In Toronto, most people, almost 90%, get infected by close contacting with COVID-19 carrier. Recent research indicates that Human-to-human transmission occurs primarily through direct contact or air droplets. The higher risk of transmission is within approximately 1 meter (about 3 feet) from the infected person; however, the maximum distance is still undetermined (@repici2020coronavirus). However, what is the most effecive way to protect spreading where people live in the same house is still undetermined.
+
+In our study, we analyzed the most popular topics: COVID-19 in Toronto. We looked at core data features in OpenToronto and applied Source of Infection from that. We discovered that the most common infection source is Close Contact with a case.Except N/A, the second higher infection is by community.
+
+We examined Source of Infection in the OpenToronto and found out that close contact with a case is the dominant reason cause people infected. However, we did not look at and account for other factors that could potenitally affect this finding, including age, specific location, and date. Source of Infection is dominated by close contact with a case, and there were a lot of missing values which could potentially affect our model. Future work should be targeted at examining the these other than source of infection and how they cause people get infected.
+
+# Data discussion
+
+The COVID-19 Cases in Toronto was conducted to an ongoing COVID-19 outbreak, in the context of an evolving global pandemic.  This data set contains demographic, geographic, and severity information for all confirmed and probable cases reported to and managed by Toronto Public Health since the first case was reported in January 2020. This includes cases that are sporadic (occurring in the community) and outbreak-associated. The data are extracted from the provincial communicable disease reporting system (iPHIS) and Toronto's custom COVID-19 case management system (CORES) and combined for reporting. Each line summarizes information for an individual case.
+
+The `covid_data` dataset is a subset of the COVID-19 Cases in Toronto under the name "data" that provides a tool for teaching survey datasets and their analysis.
+
+Variables in the `covid_data` dataset and their description are listed in the table below:
+
+```{r}
+data_table <- data.frame(vars = c("Age Group", "Source of Infection", "Currently in ICU	
+","_id","Assigned_ID","Outbreak Associated","Neighbourhood Name","FSA","Classification"),
+                           DES = c("Age at time of illness. Age groups (in years): ≤19, 20-29, 30-39, 40-49, 50-59, 60-69, 70-79, 80-89, 90+, unknown (blank)", 
+                                    "The most likely way that sporadic cases acquired their COVID-19 infection.", 
+                                    "Cases that are currently admitted to the intensive care unit (ICU)",
+                                   "Unique row identifier for Open Data database",
+                                   "A unique ID assigned to cases by Toronto Public Health for the purposes of posting to Open Data, to allow for tracking of specific cases.",
+                                   "Outbreak associated cases are associated with outbreaks of COVID-19 in Toronto healthcare institutions and healthcare settings (e.g. long-term care homes, retirement homes, hospitals, etc.) and other Toronto congregate settings (such as homeless shelters).",
+                                   
+                                   "Toronto is divided into 140 geographically distinct neighborhoods that were established to help government and community agencies with local planning by providing socio-economic data for a meaningful geographic area. Please note that client postal code information is mapped to the most up-to-date census tract (CT) and neighbourhood information available from the city. As a result, neighbourhood information is not available for those with missing postal code or when postal code could not be mapped/linked to a CT.",
+                                   "Forward sortation area (i.e. first three characters of postal code) based on the case's primary home address. FSA values are generated from client postal codes. One FSA can span multiple neighbourhoods.",
+                                   "The application of the provincial case definition to categorize the cases as confirmed or probable, according to standard criteria."))
+colnames(data_table) <- c("Covid_data survey variables", 
+                             "Description")
+kable(data_table, caption="Variables in the covid_data dataset 
+      and their description")
+```
+
+Below is a graph showing the type and missing value pattern of each variable. Our main variables of interest: Source of infection.
+
+```{r}
+visdat::vis_dat(covid_data) 
+```
+
+Below are detailed statistics on the type of each variable in the dataset as well as its missing value pattern. The below also gives some summary statistics on the dataset itself such as the number of rows, the number of columns and column type frequency.
+
+```{r}
+skimr::skim(covid_data)
+```
+
+```{r}
+covid_data$`Source of Infection` <- as.character(covid_data$`Source of Infection`)
+covid_data$`Source of Infection` <- as.factor(covid_data$`Source of Infection`)
+levels(covid_data$`Source of Infection`)
+table(covid_data$`Source of Infection`)
+round(prop.table(table(covid_data$`Source of Infection`)), 3)
+```
+
+35.9% of the sporadic cases acquired their COVID-19 infection in this dataset are by Close contact with a case, 33.4% of the sporadic cases acquired their COVID-19 infection in this dataset are N/A. 13.8% of the sporadic cases acquired their COVID-19 infection in this dataset are by Community. 6.4% of the sporadic cases acquired their COVID-19 infection in this dataset are by Healthcare. 4.6% of the sporadic cases acquired their COVID-19 infection in this dataset are by Travel.3.5% of the sporadic cases acquired their COVID-19 infection in this dataset are missing. 1.9% of the sporadic cases acquired their COVID-19 infection in this dataset are by Institutional. 0.4% of the sporadic cases acquired their COVID-19 infection in this dataset are pending.
+
+# Graph
+
+```{r}
+covid_data %>% 
+  ggplot(aes(x = `Source of Infection`)) +
+  geom_bar(mapping = aes(x = `Source of Infection`), alpha=0.5, fill="red") + 
+  labs(title="Bar plot of Infection by sources of infection") + 
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))
+```
+
+# Graph discussion
+
+In this graph we find that the frequency distribution of source of infection differs a lot for all cases. We see that the top higher infection is by close contact with a case. Except N/A, the second higher infection is by community. From this graph we can probably guess that source of infection is different amongs different cases.
+
+# Discussion
+
+The most common way cause people infected is close contact with a case in Toronto. Except N/A, the second higher infection is by community. This is evident from the graph. 
+
+To avoid close contact with a case, there are some ways:
+
+1. Once a family member has symptoms of covid, the government should encourage household members to report the situation.If the report is positive, you can get a discount in hospital and give financial support.
+
+2. There is currently an app running by the government which collaborate with apple and google which can anonymously share the covid_19 data with each other, and the government should force everyone to download.
+The non-parametric ANOVA tests shows statistically significant results. Specifically, there are significant differences among the source of infection of different cases. 
+
+To avoid the source of infection by community, there are some ways:
+
+1. Strengthen community supervision，place more alcohol disinfectants.
+
+2. Personnel visit registration in the front desk.
+
+There were missing data for source of infection and they were excluded since it is hard to impute values for distribution. It only constitutes 3.5% of the dataset because we have such a large datsaet. 
+
+Nonetheless, because of our large sample size we are able to conclude that the most common way cause people infected is close contact with a case in Toronto.
+
+## Weaknesses and next steps
+
+Observations such for Outbreak-associated cases are N/A in which we miss plenty of information and lead to biased results. There could be other sources that affect infection. Our analysis did not adjust for the confounder variables and how they affect the source of infection. Examples include, age, specific location, and date. Our next steps include looking at how these variables affect infection count and how they can affect the relationship between infection count and sources of infection. 
+
+Code and data supporting this analysis is available at: "https://github.com/purenb666/STA304.git".
 
 # References
+
 
