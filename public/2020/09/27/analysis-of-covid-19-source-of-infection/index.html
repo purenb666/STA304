@@ -56,7 +56,7 @@
 
   <article class="article">
     
-    <span class="article-duration">11 min read</span>
+    <span class="article-duration">10 min read</span>
     
 
     <h1 class="article-title">Analysis of COVID-19 source of infection</h1>
@@ -72,22 +72,6 @@
 <div id="abstract" class="section level1">
 <h1>Abstract:</h1>
 <p>We investigated the OpenToronto COVID-19 Cases in Toronto data. Performed data diagnostics, and results showed that the most common way cause people infected is close contact with a case in Toronto. These results are important because once we know the source of infection, we can then make move to protect people from infection.</p>
-<pre class="r"><code># Load packages
-library(opendatatoronto)
-library(tidyverse)</code></pre>
-<pre><code>## ── Attaching packages ───────────────────────────────────────────────────────────────────────────── tidyverse 1.3.0 ──</code></pre>
-<pre><code>## ✓ ggplot2 3.3.2     ✓ purrr   0.3.4
-## ✓ tibble  3.0.3     ✓ dplyr   1.0.2
-## ✓ tidyr   1.1.2     ✓ stringr 1.4.0
-## ✓ readr   1.3.1     ✓ forcats 0.5.0</code></pre>
-<pre><code>## ── Conflicts ──────────────────────────────────────────────────────────────────────────────── tidyverse_conflicts() ──
-## x dplyr::filter() masks stats::filter()
-## x dplyr::lag()    masks stats::lag()</code></pre>
-<pre class="r"><code>library(dplyr)
-library(visdat)
-library(cesR)
-library(skimr)
-library(knitr)</code></pre>
 <pre class="r"><code># get package
 package &lt;- show_package(&quot;64b54586-6180-4485-83eb-81e8fae3b8fe&quot;)
 package</code></pre>
@@ -149,7 +133,7 @@ colnames(data_table) &lt;- c(&quot;Covid_data survey variables&quot;,
 kable(data_table, caption=&quot;Variables in the covid_data dataset 
       and their description&quot;)</code></pre>
 <table>
-<caption><span id="tab:unnamed-chunk-3">Table 1: </span>Variables in the covid_data dataset
+<caption><span id="tab:unnamed-chunk-2">Table 1: </span>Variables in the covid_data dataset
 and their description</caption>
 <colgroup>
 <col width="5%" />
@@ -202,11 +186,11 @@ and their description</caption>
 </table>
 <p>Below is a graph showing the type and missing value pattern of each variable. Our main variables of interest: Source of infection.</p>
 <pre class="r"><code>visdat::vis_dat(covid_data) </code></pre>
-<p><img src="../../../../post/2015-07-23-r-rmarkdown_files/figure-html/unnamed-chunk-4-1.png" width="672" /></p>
+<p><img src="../../../../post/2015-07-23-r-rmarkdown_files/figure-html/unnamed-chunk-3-1.png" width="672" /></p>
 <p>Below are detailed statistics on the type of each variable in the dataset as well as its missing value pattern. The below also gives some summary statistics on the dataset itself such as the number of rows, the number of columns and column type frequency.</p>
 <pre class="r"><code>skimr::skim(covid_data)</code></pre>
 <table>
-<caption><span id="tab:unnamed-chunk-5">Table 2: </span>Data summary</caption>
+<caption><span id="tab:unnamed-chunk-4">Table 2: </span>Data summary</caption>
 <tbody>
 <tr class="odd">
 <td align="left">Name</td>
@@ -501,7 +485,7 @@ levels(covid_data$`Source of Infection`)</code></pre>
   geom_bar(mapping = aes(x = `Source of Infection`), alpha=0.5, fill=&quot;red&quot;) + 
   labs(title=&quot;Bar plot of Infection by sources of infection&quot;) + 
   theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))</code></pre>
-<p><img src="../../../../post/2015-07-23-r-rmarkdown_files/figure-html/unnamed-chunk-7-1.png" width="672" /></p>
+<p><img src="../../../../post/2015-07-23-r-rmarkdown_files/figure-html/unnamed-chunk-6-1.png" width="672" /></p>
 </div>
 <div id="graph-discussion" class="section level1">
 <h1>Graph discussion</h1>
