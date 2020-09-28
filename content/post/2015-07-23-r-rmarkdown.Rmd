@@ -10,13 +10,12 @@ tags:
 - regression
 categories: R
 ---
-
 # Abstract: 
 
 We investigated the OpenToronto COVID-19 Cases in Toronto data. Performed data diagnostics, and results showed that the most common way cause people infected is close contact with a case in Toronto. These results are important because once we know the source of infection, we can then make move to protect people from infection.
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = False)
+knitr::opts_chunk$set(echo = FALSE)
 options(scipen=999)
 # install.packages("tidyverse")
 # install.packages("devtools")

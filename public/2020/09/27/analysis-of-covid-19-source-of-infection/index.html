@@ -56,7 +56,7 @@
 
   <article class="article">
     
-    <span class="article-duration">10 min read</span>
+    <span class="article-duration">8 min read</span>
     
 
     <h1 class="article-title">Analysis of COVID-19 source of infection</h1>
@@ -72,24 +72,11 @@
 <div id="abstract" class="section level1">
 <h1>Abstract:</h1>
 <p>We investigated the OpenToronto COVID-19 Cases in Toronto data. Performed data diagnostics, and results showed that the most common way cause people infected is close contact with a case in Toronto. These results are important because once we know the source of infection, we can then make move to protect people from infection.</p>
-<pre class="r"><code># get package
-package &lt;- show_package(&quot;64b54586-6180-4485-83eb-81e8fae3b8fe&quot;)
-package</code></pre>
 <pre><code>## # A tibble: 1 x 10
 ##   title id    topics civic_issues excerpt dataset_category num_resources formats
 ##   &lt;chr&gt; &lt;chr&gt; &lt;chr&gt;  &lt;chr&gt;        &lt;chr&gt;   &lt;chr&gt;                    &lt;int&gt; &lt;chr&gt;  
 ## 1 COVI… 64b5… &lt;NA&gt;   &lt;NA&gt;         &lt;NA&gt;    &lt;NA&gt;                         1 &lt;NA&gt;   
 ## # … with 2 more variables: refresh_rate &lt;chr&gt;, last_refreshed &lt;date&gt;</code></pre>
-<pre class="r"><code># get all resources for this package
-resources &lt;- list_package_resources(&quot;64b54586-6180-4485-83eb-81e8fae3b8fe&quot;)
-
-# identify datastore resources; by default, Toronto Open Data sets datastore resource format to CSV for non-geospatial and GeoJSON for geospatial resources
-datastore_resources &lt;- filter(resources, tolower(format) %in% c(&#39;csv&#39;, &#39;geojson&#39;))
-
-# load the first datastore resource as a sample
-covid_data &lt;- filter(datastore_resources, row_number()==1) %&gt;% get_resource()
-selected_covid_data = select(covid_data, &quot;Source of Infection&quot;)
-selected_covid_data</code></pre>
 <pre><code>## # A tibble: 17,872 x 1
 ##    `Source of Infection`
 ##    &lt;chr&gt;                
@@ -116,22 +103,6 @@ selected_covid_data</code></pre>
 <p>The COVID-19 Cases in Toronto was conducted to an ongoing COVID-19 outbreak, in the context of an evolving global pandemic. This data set contains demographic, geographic, and severity information for all confirmed and probable cases reported to and managed by Toronto Public Health since the first case was reported in January 2020. This includes cases that are sporadic (occurring in the community) and outbreak-associated. The data are extracted from the provincial communicable disease reporting system (iPHIS) and Toronto’s custom COVID-19 case management system (CORES) and combined for reporting. Each line summarizes information for an individual case.</p>
 <p>The <code>covid_data</code> dataset is a subset of the COVID-19 Cases in Toronto under the name “data” that provides a tool for teaching survey datasets and their analysis.</p>
 <p>Variables in the <code>covid_data</code> dataset and their description are listed in the table below:</p>
-<pre class="r"><code>data_table &lt;- data.frame(vars = c(&quot;Age Group&quot;, &quot;Source of Infection&quot;, &quot;Currently in ICU 
-&quot;,&quot;_id&quot;,&quot;Assigned_ID&quot;,&quot;Outbreak Associated&quot;,&quot;Neighbourhood Name&quot;,&quot;FSA&quot;,&quot;Classification&quot;),
-                           DES = c(&quot;Age at time of illness. Age groups (in years): ≤19, 20-29, 30-39, 40-49, 50-59, 60-69, 70-79, 80-89, 90+, unknown (blank)&quot;, 
-                                    &quot;The most likely way that sporadic cases acquired their COVID-19 infection.&quot;, 
-                                    &quot;Cases that are currently admitted to the intensive care unit (ICU)&quot;,
-                                   &quot;Unique row identifier for Open Data database&quot;,
-                                   &quot;A unique ID assigned to cases by Toronto Public Health for the purposes of posting to Open Data, to allow for tracking of specific cases.&quot;,
-                                   &quot;Outbreak associated cases are associated with outbreaks of COVID-19 in Toronto healthcare institutions and healthcare settings (e.g. long-term care homes, retirement homes, hospitals, etc.) and other Toronto congregate settings (such as homeless shelters).&quot;,
-                                   
-                                   &quot;Toronto is divided into 140 geographically distinct neighborhoods that were established to help government and community agencies with local planning by providing socio-economic data for a meaningful geographic area. Please note that client postal code information is mapped to the most up-to-date census tract (CT) and neighbourhood information available from the city. As a result, neighbourhood information is not available for those with missing postal code or when postal code could not be mapped/linked to a CT.&quot;,
-                                   &quot;Forward sortation area (i.e. first three characters of postal code) based on the case&#39;s primary home address. FSA values are generated from client postal codes. One FSA can span multiple neighbourhoods.&quot;,
-                                   &quot;The application of the provincial case definition to categorize the cases as confirmed or probable, according to standard criteria.&quot;))
-colnames(data_table) &lt;- c(&quot;Covid_data survey variables&quot;, 
-                             &quot;Description&quot;)
-kable(data_table, caption=&quot;Variables in the covid_data dataset 
-      and their description&quot;)</code></pre>
 <table>
 <caption><span id="tab:unnamed-chunk-2">Table 1: </span>Variables in the covid_data dataset
 and their description</caption>
@@ -185,10 +156,8 @@ and their description</caption>
 </tbody>
 </table>
 <p>Below is a graph showing the type and missing value pattern of each variable. Our main variables of interest: Source of infection.</p>
-<pre class="r"><code>visdat::vis_dat(covid_data) </code></pre>
 <p><img src="../../../../post/2015-07-23-r-rmarkdown_files/figure-html/unnamed-chunk-3-1.png" width="672" /></p>
 <p>Below are detailed statistics on the type of each variable in the dataset as well as its missing value pattern. The below also gives some summary statistics on the dataset itself such as the number of rows, the number of columns and column type frequency.</p>
-<pre class="r"><code>skimr::skim(covid_data)</code></pre>
 <table>
 <caption><span id="tab:unnamed-chunk-4">Table 2: </span>Data summary</caption>
 <tbody>
@@ -453,14 +422,10 @@ and their description</caption>
 </tr>
 </tbody>
 </table>
-<pre class="r"><code>covid_data$`Source of Infection` &lt;- as.character(covid_data$`Source of Infection`)
-covid_data$`Source of Infection` &lt;- as.factor(covid_data$`Source of Infection`)
-levels(covid_data$`Source of Infection`)</code></pre>
 <pre><code>## [1] &quot;Close contact&quot;             &quot;Community&quot;                
 ## [3] &quot;Healthcare&quot;                &quot;Institutional&quot;            
 ## [5] &quot;N/A - Outbreak associated&quot; &quot;Pending&quot;                  
 ## [7] &quot;Travel&quot;                    &quot;Unknown/Missing&quot;</code></pre>
-<pre class="r"><code>table(covid_data$`Source of Infection`)</code></pre>
 <pre><code>## 
 ##             Close contact                 Community                Healthcare 
 ##                      6419                      2471                      1142 
@@ -468,7 +433,6 @@ levels(covid_data$`Source of Infection`)</code></pre>
 ##                       344                      5974                        70 
 ##                    Travel           Unknown/Missing 
 ##                       830                       622</code></pre>
-<pre class="r"><code>round(prop.table(table(covid_data$`Source of Infection`)), 3)</code></pre>
 <pre><code>## 
 ##             Close contact                 Community                Healthcare 
 ##                     0.359                     0.138                     0.064 
@@ -480,11 +444,6 @@ levels(covid_data$`Source of Infection`)</code></pre>
 </div>
 <div id="graph" class="section level1">
 <h1>Graph</h1>
-<pre class="r"><code>covid_data %&gt;% 
-  ggplot(aes(x = `Source of Infection`)) +
-  geom_bar(mapping = aes(x = `Source of Infection`), alpha=0.5, fill=&quot;red&quot;) + 
-  labs(title=&quot;Bar plot of Infection by sources of infection&quot;) + 
-  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))</code></pre>
 <p><img src="../../../../post/2015-07-23-r-rmarkdown_files/figure-html/unnamed-chunk-6-1.png" width="672" /></p>
 </div>
 <div id="graph-discussion" class="section level1">
@@ -557,9 +516,6 @@ The non-parametric ANOVA tests shows statistically significant results. Specific
 
 
     
-<script src="../../../../js/math-code.js"></script>
-<script async src="//cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML"></script>
-
 
     
   </body>
