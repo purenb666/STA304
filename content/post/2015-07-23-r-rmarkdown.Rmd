@@ -1,7 +1,7 @@
 ---
-title: "Analysis of 2019 CES Data"
+title: "Analysis of COVID-19 source of infection"
 author: "Wenqing Cao"
-date: '2015-07-23T21:13:14-05:00'
+date: '2020-09-27'
 output: html_document
 bibliography: "references.bib"
 tags:
@@ -49,7 +49,7 @@ While COVID-19 pandemic is still affecting people in various categories globally
 
 In our study, we analyzed the most popular topics: COVID-19 in Toronto. We looked at core data features in OpenToronto and applied Source of Infection from that. We discovered that the most common infection source is Close Contact with a case.Except N/A, the second higher infection is by community.
 
-We examined Source of Infection in the OpenToronto and found out that close contact with a case is the dominant reason cause people infected. However, we did not look at and account for other factors that could potenitally affect this finding, including age, specific location, and date. Source of Infection is dominated by close contact with a case, and there were a lot of missing values which could potentially affect our model. Future work should be targeted at examining the these other than source of infection and how they cause people get infected.
+We examined Source of Infection in the OpenToronto and found out that close contact with a case is the dominant reason cause people infected. However, we did not look at and account for other factors that could potentially affect this finding, including age, specific location, and date. Source of Infection is dominated by close contact with a case, and there were a lot of missing values which could potentially affect our model. Future work should be targeted at examining the these other than source of infection and how they cause people get infected.
 
 # Data discussion
 

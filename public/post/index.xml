@@ -6,13 +6,13 @@
     <description>Recent content in Posts on STA304 Assignment</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Thu, 23 Jul 2015 21:13:14 -0500</lastBuildDate><atom:link href="/post/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Sun, 27 Sep 2020 00:00:00 +0000</lastBuildDate><atom:link href="/post/index.xml" rel="self" type="application/rss+xml" />
     <item>
-      <title>Analysis of 2019 CES Data</title>
-      <link>/2015/07/23/analysis-of-2019-ces-data/</link>
-      <pubDate>Thu, 23 Jul 2015 21:13:14 -0500</pubDate>
+      <title>Analysis of COVID-19 source of infection</title>
+      <link>/2020/09/27/analysis-of-covid-19-source-of-infection/</link>
+      <pubDate>Sun, 27 Sep 2020 00:00:00 +0000</pubDate>
       
-      <guid>/2015/07/23/analysis-of-2019-ces-data/</guid>
+      <guid>/2020/09/27/analysis-of-covid-19-source-of-infection/</guid>
       <description>Abstract: We investigated the OpenToronto COVID-19 Cases in Toronto data. Performed data diagnostics, and results showed that the most common way cause people infected is close contact with a case in Toronto. These results are important because once we know the source of infection, we can then make move to protect people from infection.
 # Load packages library(opendatatoronto) library(tidyverse) ## ── Attaching packages ───────────────────────────────────────────────────────────────────────────── tidyverse 1.3.0 ── ## ✓ ggplot2 3.</description>
     </item>
